@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                bat 'pip install -r shared/requirements.txt'
+            }
+        }
+        stage('Run Production Analysis') {
+            steps {
+                bat 'python shared/analysis.py'
+            }
+        }
+        stage('Archive Results') {
+            steps {
+                archiveArtifacts artifacts: 'output/**/*', allowEmptyArchive: true
+            }
+        }
+    }
+}
